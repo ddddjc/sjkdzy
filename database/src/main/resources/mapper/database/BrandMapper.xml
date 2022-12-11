@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.BrandMapper">
+    
+    <resultMap type="Brand" id="BrandResult">
+        <result property="brandId"    column="brand_id"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="brandCompany"    column="brand_company"    />
+        <result property="brandDescript"    column="brand_descript"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <resultMap id="BrandProductResult" type="Brand" extends="BrandResult">
+        <collection property="productList" notNullColumn="sub_product_id" javaType="java.util.List" resultMap="ProductResult" />
+    </resultMap>
+
+    <resultMap type="Product" id="ProductResult">
+        <result property="productId"    column="sub_product_id"    />
+        <result property="productName"    column="sub_product_name"    />
+        <result property="productPurchasePrice"    column="sub_product_purchase_price"    />
+        <result property="productSalePrice"    column="sub_product_sale_price"    />
+        <result property="productDescription"    column="sub_product_description"    />
+        <result property="brandId"    column="sub_brand_id"    />
+        <result property="status"    column="sub_status"    />
+        <result property="createBy"    column="sub_create_by"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="updateBy"    column="sub_update_by"    />
+        <result property="updateTime"    column="sub_update_time"    />
+        <result property="remark"    column="sub_remark"    />
+    </resultMap>
+
+    <sql id="selectBrandVo">
+        select brand_id, brand_name, brand_company, brand_descript, status, create_by, create_time, update_by, update_time, remark from brand
+    </sql>
+
+    <select id="selectBrandList" parameterType="Brand" resultMap="BrandResult">
+        <include refid="selectBrandVo"/>
+        <where>  
+            <if test="brandName != null  and brandName != ''"> and brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="brandCompany != null  and brandCompany != ''"> and brand_company = #{brandCompany}</if>
+            <if test="brandDescript != null  and brandDescript != ''"> and brand_descript = #{brandDescript}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBrandByBrandId" parameterType="Long" resultMap="BrandProductResult">
+        select a.brand_id, a.brand_name, a.brand_company, a.brand_descript, a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.remark,
+ b.product_id as sub_product_id, b.product_name as sub_product_name, b.product_purchase_price as sub_product_purchase_price, b.product_sale_price as sub_product_sale_price, b.product_description as sub_product_description, b.brand_id as sub_brand_id, b.status as sub_status, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time, b.remark as sub_remark
+        from brand a
+        left join product b on b.brand_id = a.brand_id
+        where a.brand_id = #{brandId}
+    </select>
+        
+    <insert id="insertBrand" parameterType="Brand">
+        insert into brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">brand_id,</if>
+            <if test="brandName != null">brand_name,</if>
+            <if test="brandCompany != null">brand_company,</if>
+            <if test="brandDescript != null">brand_descript,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">#{brandId},</if>
+            <if test="brandName != null">#{brandName},</if>
+            <if test="brandCompany != null">#{brandCompany},</if>
+            <if test="brandDescript != null">#{brandDescript},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBrand" parameterType="Brand">
+        update brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null">brand_name = #{brandName},</if>
+            <if test="brandCompany != null">brand_company = #{brandCompany},</if>
+            <if test="brandDescript != null">brand_descript = #{brandDescript},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where brand_id = #{brandId}
+    </update>
+
+    <delete id="deleteBrandByBrandId" parameterType="Long">
+        delete from brand where brand_id = #{brandId}
+    </delete>
+
+    <delete id="deleteBrandByBrandIds" parameterType="String">
+        delete from brand where brand_id in 
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteProductByBrandIds" parameterType="String">
+        delete from product where brand_id in 
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteProductByBrandId" parameterType="Long">
+        delete from product where brand_id = #{brandId}
+    </delete>
+
+    <insert id="batchProduct">
+        insert into product( product_id, product_name, product_purchase_price, product_sale_price, product_description, brand_id, status, create_by, create_time, update_by, update_time, remark) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.productId}, #{item.productName}, #{item.productPurchasePrice}, #{item.productSalePrice}, #{item.productDescription}, #{item.brandId}, #{item.status}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark})
+        </foreach>
+    </insert>
+</mapper>

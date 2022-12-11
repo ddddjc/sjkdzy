@@ -1,0 +1,98 @@
+package com.ruoyi.web.controller.database;
+
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.database.domain.Customer;
+import com.ruoyi.database.service.ICustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
+/**
+ * 顾客管理Controller
+ *
+ * @author tinaliasd
+ * @date 2022-12-05
+ */
+@RestController
+@RequestMapping("/database/customer")
+public class CustomerController extends BaseController
+{
+    @Autowired
+    private ICustomerService customerService;
+
+    /**
+     * 查询顾客管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('database:customer:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(Customer customer)
+    {
+        startPage();
+        List<Customer> list = customerService.selectCustomerList(customer);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出顾客管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('database:customer:export')")
+    @Log(title = "顾客管理", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, Customer customer)
+    {
+        List<Customer> list = customerService.selectCustomerList(customer);
+        ExcelUtil<Customer> util = new ExcelUtil<Customer>(Customer.class);
+        util.exportExcel(response, list, "顾客管理数据");
+    }
+
+    /**
+     * 获取顾客管理详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('database:customer:query')")
+    @GetMapping(value = "/{customerId}")
+    public AjaxResult getInfo(@PathVariable("customerId") Long customerId)
+    {
+        return AjaxResult.success(customerService.selectCustomerByCustomerId(customerId));
+    }
+
+    /**
+     * 新增顾客管理
+     */
+    @PreAuthorize("@ss.hasPermi('database:customer:add')")
+    @Log(title = "顾客管理", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody Customer customer)
+    {
+        return toAjax(customerService.insertCustomer(customer));
+    }
+
+    /**
+     * 修改顾客管理
+     */
+    @PreAuthorize("@ss.hasPermi('database:customer:edit')")
+    @Log(title = "顾客管理", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody Customer customer)
+    {
+        return toAjax(customerService.updateCustomer(customer));
+    }
+
+    /**
+     * 删除顾客管理
+     */
+    @PreAuthorize("@ss.hasPermi('database:customer:remove')")
+    @Log(title = "顾客管理", businessType = BusinessType.DELETE)
+	@DeleteMapping("/{customerIds}")
+    public AjaxResult remove(@PathVariable Long[] customerIds)
+    {
+        return toAjax(customerService.deleteCustomerByCustomerIds(customerIds));
+    }
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.SaleOrderMapper">
+    
+    <resultMap type="SaleOrder" id="SaleOrderResult">
+        <result property="saleOrderId"    column="sale_order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="depotId"    column="depot_id"    />
+        <result property="num"    column="num"    />
+        <result property="purchaseOrderTime"    column="purchase_order_time"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="saleOrderNumber"    column="sale_order_number"    />
+        <result property="saleOrderDescription"    column="sale_order_description"    />
+    </resultMap>
+
+    <sql id="selectSaleOrderVo">
+        select sale_order_id, product_id, depot_id, num, purchase_order_time, customer_id, sale_order_number, sale_order_description from sale_order
+    </sql>
+
+    <select id="selectSaleOrderList" parameterType="SaleOrder" resultMap="SaleOrderResult">
+        <include refid="selectSaleOrderVo"/>
+        <where>  
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="depotId != null "> and depot_id = #{depotId}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="purchaseOrderTime != null "> and purchase_order_time = #{purchaseOrderTime}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="saleOrderNumber != null "> and sale_order_number = #{saleOrderNumber}</if>
+            <if test="saleOrderDescription != null  and saleOrderDescription != ''"> and sale_order_description = #{saleOrderDescription}</if>
+        </where>
+    </select>
+    
+    <select id="selectSaleOrderBySaleOrderId" parameterType="Long" resultMap="SaleOrderResult">
+        <include refid="selectSaleOrderVo"/>
+        where sale_order_id = #{saleOrderId}
+    </select>
+        
+    <insert id="insertSaleOrder" parameterType="SaleOrder" useGeneratedKeys="true" keyProperty="saleOrderId">
+        insert into sale_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="depotId != null">depot_id,</if>
+            <if test="num != null">num,</if>
+            <if test="purchaseOrderTime != null">purchase_order_time,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="saleOrderNumber != null">sale_order_number,</if>
+            <if test="saleOrderDescription != null">sale_order_description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="depotId != null">#{depotId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="purchaseOrderTime != null">#{purchaseOrderTime},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="saleOrderNumber != null">#{saleOrderNumber},</if>
+            <if test="saleOrderDescription != null">#{saleOrderDescription},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSaleOrder" parameterType="SaleOrder">
+        update sale_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="depotId != null">depot_id = #{depotId},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="purchaseOrderTime != null">purchase_order_time = #{purchaseOrderTime},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="saleOrderNumber != null">sale_order_number = #{saleOrderNumber},</if>
+            <if test="saleOrderDescription != null">sale_order_description = #{saleOrderDescription},</if>
+        </trim>
+        where sale_order_id = #{saleOrderId}
+    </update>
+
+    <delete id="deleteSaleOrderBySaleOrderId" parameterType="Long">
+        delete from sale_order where sale_order_id = #{saleOrderId}
+    </delete>
+
+    <delete id="deleteSaleOrderBySaleOrderIds" parameterType="String">
+        delete from sale_order where sale_order_id in 
+        <foreach item="saleOrderId" collection="array" open="(" separator="," close=")">
+            #{saleOrderId}
+        </foreach>
+    </delete>
+</mapper>

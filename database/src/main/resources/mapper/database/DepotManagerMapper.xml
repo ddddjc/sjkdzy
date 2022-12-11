@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.DepotManagerMapper">
+    
+    <resultMap type="DepotManager" id="DepotManagerResult">
+        <result property="depotManagerId"    column="depot_manager_id"    />
+        <result property="depotManagerTelephone"    column="depot_manager_telephone"    />
+        <result property="depotSex"    column="depot_sex"    />
+        <result property="depotSalary"    column="depot_salary"    />
+        <result property="depotAge"    column="depot_age"    />
+        <result property="depotDescription"    column="depot_description"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <resultMap id="DepotManagerDepotResult" type="DepotManager" extends="DepotManagerResult">
+        <collection property="depotList" notNullColumn="sub_depot_id" javaType="java.util.List" resultMap="DepotResult" />
+    </resultMap>
+
+    <resultMap type="Depot" id="DepotResult">
+        <result property="depotId"    column="sub_depot_id"    />
+        <result property="depotManagerId"    column="sub_depot_manager_id"    />
+        <result property="depotLocal"    column="sub_depot_local"    />
+        <result property="depotName"    column="sub_depot_name"    />
+        <result property="depotSize"    column="sub_depot_size"    />
+        <result property="depotDescription"    column="sub_depot_description"    />
+        <result property="status"    column="sub_status"    />
+        <result property="createBy"    column="sub_create_by"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="updateBy"    column="sub_update_by"    />
+        <result property="updateTime"    column="sub_update_time"    />
+        <result property="remark"    column="sub_remark"    />
+    </resultMap>
+
+    <sql id="selectDepotManagerVo">
+        select depot_manager_id, depot_manager_telephone, depot_sex, depot_salary, depot_age, depot_description, status, create_by, create_time, update_by, update_time, remark from depot_manager
+    </sql>
+
+    <select id="selectDepotManagerList" parameterType="DepotManager" resultMap="DepotManagerResult">
+        <include refid="selectDepotManagerVo"/>
+        <where>  
+            <if test="depotManagerTelephone != null  and depotManagerTelephone != ''"> and depot_manager_telephone = #{depotManagerTelephone}</if>
+            <if test="depotSex != null "> and depot_sex = #{depotSex}</if>
+            <if test="depotSalary != null "> and depot_salary = #{depotSalary}</if>
+            <if test="depotAge != null "> and depot_age = #{depotAge}</if>
+            <if test="depotDescription != null  and depotDescription != ''"> and depot_description = #{depotDescription}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDepotManagerByDepotManagerId" parameterType="Long" resultMap="DepotManagerDepotResult">
+        select a.depot_manager_id, a.depot_manager_telephone, a.depot_sex, a.depot_salary, a.depot_age, a.depot_description, a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.remark,
+ b.depot_id as sub_depot_id, b.depot_manager_id as sub_depot_manager_id, b.depot_local as sub_depot_local, b.depot_name as sub_depot_name, b.depot_size as sub_depot_size, b.depot_description as sub_depot_description, b.status as sub_status, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time, b.remark as sub_remark
+        from depot_manager a
+        left join depot b on b.depot_manager_id = a.depot_manager_id
+        where a.depot_manager_id = #{depotManagerId}
+    </select>
+        
+    <insert id="insertDepotManager" parameterType="DepotManager">
+        insert into depot_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="depotManagerId != null">depot_manager_id,</if>
+            <if test="depotManagerTelephone != null">depot_manager_telephone,</if>
+            <if test="depotSex != null">depot_sex,</if>
+            <if test="depotSalary != null">depot_salary,</if>
+            <if test="depotAge != null">depot_age,</if>
+            <if test="depotDescription != null">depot_description,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="depotManagerId != null">#{depotManagerId},</if>
+            <if test="depotManagerTelephone != null">#{depotManagerTelephone},</if>
+            <if test="depotSex != null">#{depotSex},</if>
+            <if test="depotSalary != null">#{depotSalary},</if>
+            <if test="depotAge != null">#{depotAge},</if>
+            <if test="depotDescription != null">#{depotDescription},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDepotManager" parameterType="DepotManager">
+        update depot_manager
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="depotManagerTelephone != null">depot_manager_telephone = #{depotManagerTelephone},</if>
+            <if test="depotSex != null">depot_sex = #{depotSex},</if>
+            <if test="depotSalary != null">depot_salary = #{depotSalary},</if>
+            <if test="depotAge != null">depot_age = #{depotAge},</if>
+            <if test="depotDescription != null">depot_description = #{depotDescription},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where depot_manager_id = #{depotManagerId}
+    </update>
+
+    <delete id="deleteDepotManagerByDepotManagerId" parameterType="Long">
+        delete from depot_manager where depot_manager_id = #{depotManagerId}
+    </delete>
+
+    <delete id="deleteDepotManagerByDepotManagerIds" parameterType="String">
+        delete from depot_manager where depot_manager_id in 
+        <foreach item="depotManagerId" collection="array" open="(" separator="," close=")">
+            #{depotManagerId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteDepotByDepotManagerIds" parameterType="String">
+        delete from depot where depot_manager_id in 
+        <foreach item="depotManagerId" collection="array" open="(" separator="," close=")">
+            #{depotManagerId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteDepotByDepotManagerId" parameterType="Long">
+        delete from depot where depot_manager_id = #{depotManagerId}
+    </delete>
+
+    <insert id="batchDepot">
+        insert into depot( depot_id, depot_manager_id, depot_local, depot_name, depot_size, depot_description, status, create_by, create_time, update_by, update_time, remark) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.depotId}, #{item.depotManagerId}, #{item.depotLocal}, #{item.depotName}, #{item.depotSize}, #{item.depotDescription}, #{item.status}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark})
+        </foreach>
+    </insert>
+</mapper>

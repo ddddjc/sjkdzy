@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.PurchaseOrderMapper">
+    
+    <resultMap type="PurchaseOrder" id="PurchaseOrderResult">
+        <result property="purchaseOrderId"    column="purchase_order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="depotId"    column="depot_id"    />
+        <result property="num"    column="num"    />
+        <result property="providerId"    column="provider_id"    />
+        <result property="purchaseOrderTime"    column="purchase_order_time"    />
+        <result property="purchaseOrderNumber"    column="purchase_order_number"    />
+        <result property="purchaseOrderDescription"    column="purchase_order_description"    />
+    </resultMap>
+
+    <sql id="selectPurchaseOrderVo">
+        select purchase_order_id, product_id, depot_id, num, provider_id, purchase_order_time, purchase_order_number, purchase_order_description from purchase_order
+    </sql>
+
+    <select id="selectPurchaseOrderList" parameterType="PurchaseOrder" resultMap="PurchaseOrderResult">
+        <include refid="selectPurchaseOrderVo"/>
+        <where>  
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="depotId != null "> and depot_id = #{depotId}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="providerId != null "> and provider_id = #{providerId}</if>
+            <if test="purchaseOrderTime != null "> and purchase_order_time = #{purchaseOrderTime}</if>
+            <if test="purchaseOrderNumber != null "> and purchase_order_number = #{purchaseOrderNumber}</if>
+            <if test="purchaseOrderDescription != null  and purchaseOrderDescription != ''"> and purchase_order_description = #{purchaseOrderDescription}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchaseOrderByPurchaseOrderId" parameterType="Long" resultMap="PurchaseOrderResult">
+        <include refid="selectPurchaseOrderVo"/>
+        where purchase_order_id = #{purchaseOrderId}
+    </select>
+        
+    <insert id="insertPurchaseOrder" parameterType="PurchaseOrder">
+        insert into purchase_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purchaseOrderId != null">purchase_order_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="depotId != null">depot_id,</if>
+            <if test="num != null">num,</if>
+            <if test="providerId != null">provider_id,</if>
+            <if test="purchaseOrderTime != null">purchase_order_time,</if>
+            <if test="purchaseOrderNumber != null">purchase_order_number,</if>
+            <if test="purchaseOrderDescription != null">purchase_order_description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purchaseOrderId != null">#{purchaseOrderId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="depotId != null">#{depotId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="providerId != null">#{providerId},</if>
+            <if test="purchaseOrderTime != null">#{purchaseOrderTime},</if>
+            <if test="purchaseOrderNumber != null">#{purchaseOrderNumber},</if>
+            <if test="purchaseOrderDescription != null">#{purchaseOrderDescription},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurchaseOrder" parameterType="PurchaseOrder">
+        update purchase_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="depotId != null">depot_id = #{depotId},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="providerId != null">provider_id = #{providerId},</if>
+            <if test="purchaseOrderTime != null">purchase_order_time = #{purchaseOrderTime},</if>
+            <if test="purchaseOrderNumber != null">purchase_order_number = #{purchaseOrderNumber},</if>
+            <if test="purchaseOrderDescription != null">purchase_order_description = #{purchaseOrderDescription},</if>
+        </trim>
+        where purchase_order_id = #{purchaseOrderId}
+    </update>
+
+    <delete id="deletePurchaseOrderByPurchaseOrderId" parameterType="Long">
+        delete from purchase_order where purchase_order_id = #{purchaseOrderId}
+    </delete>
+
+    <delete id="deletePurchaseOrderByPurchaseOrderIds" parameterType="String">
+        delete from purchase_order where purchase_order_id in 
+        <foreach item="purchaseOrderId" collection="array" open="(" separator="," close=")">
+            #{purchaseOrderId}
+        </foreach>
+    </delete>
+</mapper>

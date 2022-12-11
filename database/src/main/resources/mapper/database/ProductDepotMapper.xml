@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.ProductDepotMapper">
+    
+    <resultMap type="ProductDepot" id="ProductDepotResult">
+        <result property="productDepotId"    column="product_depot_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="depotId"    column="depot_id"    />
+        <result property="num"    column="num"    />
+    </resultMap>
+
+    <sql id="selectProductDepotVo">
+        select product_depot_id, product_id, depot_id, num from product_depot
+    </sql>
+
+    <select id="selectProductDepotList" parameterType="ProductDepot" resultMap="ProductDepotResult">
+        <include refid="selectProductDepotVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectProductDepotByProductDepotId" parameterType="Long" resultMap="ProductDepotResult">
+        <include refid="selectProductDepotVo"/>
+        where product_depot_id = #{productDepotId}
+    </select>
+        
+    <insert id="insertProductDepot" parameterType="ProductDepot" useGeneratedKeys="true" keyProperty="productDepotId">
+        insert into product_depot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="depotId != null">depot_id,</if>
+            <if test="num != null">num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="depotId != null">#{depotId},</if>
+            <if test="num != null">#{num},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductDepot" parameterType="ProductDepot">
+        update product_depot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="depotId != null">depot_id = #{depotId},</if>
+            <if test="num != null">num = #{num},</if>
+        </trim>
+        where product_depot_id = #{productDepotId}
+    </update>
+
+    <delete id="deleteProductDepotByProductDepotId" parameterType="Long">
+        delete from product_depot where product_depot_id = #{productDepotId}
+    </delete>
+
+    <delete id="deleteProductDepotByProductDepotIds" parameterType="String">
+        delete from product_depot where product_depot_id in 
+        <foreach item="productDepotId" collection="array" open="(" separator="," close=")">
+            #{productDepotId}
+        </foreach>
+    </delete>
+</mapper>

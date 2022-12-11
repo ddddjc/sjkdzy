@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.ProviderMapper">
+    
+    <resultMap type="Provider" id="ProviderResult">
+        <result property="providerId"    column="provider_id"    />
+        <result property="providerName"    column="provider_name"    />
+        <result property="providerTelephone"    column="provider_telephone"    />
+        <result property="providerCity"    column="provider_city"    />
+        <result property="provideDescription"    column="provide_description"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectProviderVo">
+        select provider_id, provider_name, provider_telephone, provider_city, provide_description, status, create_by, create_time, update_by, update_time, remark from provider
+    </sql>
+
+    <select id="selectProviderList" parameterType="Provider" resultMap="ProviderResult">
+        <include refid="selectProviderVo"/>
+        <where>  
+            <if test="providerName != null  and providerName != ''"> and provider_name like concat('%', #{providerName}, '%')</if>
+            <if test="providerTelephone != null  and providerTelephone != ''"> and provider_telephone = #{providerTelephone}</if>
+            <if test="providerCity != null  and providerCity != ''"> and provider_city = #{providerCity}</if>
+            <if test="provideDescription != null  and provideDescription != ''"> and provide_description = #{provideDescription}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectProviderByProviderId" parameterType="Long" resultMap="ProviderResult">
+        <include refid="selectProviderVo"/>
+        where provider_id = #{providerId}
+    </select>
+        
+    <insert id="insertProvider" parameterType="Provider">
+        insert into provider
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="providerId != null">provider_id,</if>
+            <if test="providerName != null">provider_name,</if>
+            <if test="providerTelephone != null">provider_telephone,</if>
+            <if test="providerCity != null">provider_city,</if>
+            <if test="provideDescription != null">provide_description,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="providerId != null">#{providerId},</if>
+            <if test="providerName != null">#{providerName},</if>
+            <if test="providerTelephone != null">#{providerTelephone},</if>
+            <if test="providerCity != null">#{providerCity},</if>
+            <if test="provideDescription != null">#{provideDescription},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProvider" parameterType="Provider">
+        update provider
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="providerName != null">provider_name = #{providerName},</if>
+            <if test="providerTelephone != null">provider_telephone = #{providerTelephone},</if>
+            <if test="providerCity != null">provider_city = #{providerCity},</if>
+            <if test="provideDescription != null">provide_description = #{provideDescription},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where provider_id = #{providerId}
+    </update>
+
+    <delete id="deleteProviderByProviderId" parameterType="Long">
+        delete from provider where provider_id = #{providerId}
+    </delete>
+
+    <delete id="deleteProviderByProviderIds" parameterType="String">
+        delete from provider where provider_id in 
+        <foreach item="providerId" collection="array" open="(" separator="," close=")">
+            #{providerId}
+        </foreach>
+    </delete>
+</mapper>

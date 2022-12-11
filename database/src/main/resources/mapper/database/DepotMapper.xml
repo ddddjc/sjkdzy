@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.database.mapper.DepotMapper">
+    
+    <resultMap type="Depot" id="DepotResult">
+        <result property="depotId"    column="depot_id"    />
+        <result property="depotManagerId"    column="depot_manager_id"    />
+        <result property="depotLocal"    column="depot_local"    />
+        <result property="depotName"    column="depot_name"    />
+        <result property="depotSize"    column="depot_size"    />
+        <result property="depotDescription"    column="depot_description"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDepotVo">
+        select depot_id, depot_manager_id, depot_local, depot_name, depot_size, depot_description, status, create_by, create_time, update_by, update_time, remark from depot
+    </sql>
+
+    <select id="selectDepotList" parameterType="Depot" resultMap="DepotResult">
+        <include refid="selectDepotVo"/>
+        <where>  
+            <if test="depotManagerId != null "> and depot_manager_id = #{depotManagerId}</if>
+            <if test="depotLocal != null  and depotLocal != ''"> and depot_local = #{depotLocal}</if>
+            <if test="depotName != null  and depotName != ''"> and depot_name like concat('%', #{depotName}, '%')</if>
+            <if test="depotSize != null "> and depot_size = #{depotSize}</if>
+            <if test="depotDescription != null  and depotDescription != ''"> and depot_description = #{depotDescription}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDepotByDepotId" parameterType="Long" resultMap="DepotResult">
+        <include refid="selectDepotVo"/>
+        where depot_id = #{depotId}
+    </select>
+        
+    <insert id="insertDepot" parameterType="Depot">
+        insert into depot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="depotId != null">depot_id,</if>
+            <if test="depotManagerId != null">depot_manager_id,</if>
+            <if test="depotLocal != null">depot_local,</if>
+            <if test="depotName != null">depot_name,</if>
+            <if test="depotSize != null">depot_size,</if>
+            <if test="depotDescription != null">depot_description,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="depotId != null">#{depotId},</if>
+            <if test="depotManagerId != null">#{depotManagerId},</if>
+            <if test="depotLocal != null">#{depotLocal},</if>
+            <if test="depotName != null">#{depotName},</if>
+            <if test="depotSize != null">#{depotSize},</if>
+            <if test="depotDescription != null">#{depotDescription},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDepot" parameterType="Depot">
+        update depot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="depotManagerId != null">depot_manager_id = #{depotManagerId},</if>
+            <if test="depotLocal != null">depot_local = #{depotLocal},</if>
+            <if test="depotName != null">depot_name = #{depotName},</if>
+            <if test="depotSize != null">depot_size = #{depotSize},</if>
+            <if test="depotDescription != null">depot_description = #{depotDescription},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where depot_id = #{depotId}
+    </update>
+
+    <delete id="deleteDepotByDepotId" parameterType="Long">
+        delete from depot where depot_id = #{depotId}
+    </delete>
+
+    <delete id="deleteDepotByDepotIds" parameterType="String">
+        delete from depot where depot_id in 
+        <foreach item="depotId" collection="array" open="(" separator="," close=")">
+            #{depotId}
+        </foreach>
+    </delete>
+</mapper>
