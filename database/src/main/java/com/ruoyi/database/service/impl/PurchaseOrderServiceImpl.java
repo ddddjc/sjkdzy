@@ -1,8 +1,6 @@
 package com.ruoyi.database.service.impl;
 
 import java.util.List;
-
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.database.mapper.PurchaseOrderMapper;
@@ -13,17 +11,13 @@ import com.ruoyi.database.service.IPurchaseOrderService;
  * 采购订单Service业务层处理
  * 
  * @author tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
 public class PurchaseOrderServiceImpl implements IPurchaseOrderService 
 {
     @Autowired
     private PurchaseOrderMapper purchaseOrderMapper;
-
-
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
 
     /**
      * 查询采购订单
@@ -58,8 +52,6 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
     @Override
     public int insertPurchaseOrder(PurchaseOrder purchaseOrder)
     {
-        purchaseOrder.setPurchaseOrderId(snowFlakeUtil.nextId());
-
         return purchaseOrderMapper.insertPurchaseOrder(purchaseOrder);
     }
 

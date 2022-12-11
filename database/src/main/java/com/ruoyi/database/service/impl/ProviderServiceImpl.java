@@ -2,7 +2,6 @@ package com.ruoyi.database.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.database.mapper.ProviderMapper;
@@ -13,18 +12,13 @@ import com.ruoyi.database.service.IProviderService;
  * 供应者管理Service业务层处理
  * 
  * @author tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
 public class ProviderServiceImpl implements IProviderService 
 {
     @Autowired
     private ProviderMapper providerMapper;
-
-
-
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
 
     /**
      * 查询供应者管理
@@ -59,8 +53,6 @@ public class ProviderServiceImpl implements IProviderService
     @Override
     public int insertProvider(Provider provider)
     {
-        provider.setProviderId(snowFlakeUtil.nextId());
-
         provider.setCreateTime(DateUtils.getNowDate());
         return providerMapper.insertProvider(provider);
     }

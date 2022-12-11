@@ -2,7 +2,6 @@ package com.ruoyi.database.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.database.mapper.ProductMapper;
@@ -13,15 +12,13 @@ import com.ruoyi.database.service.IProductService;
  * 物品信息管理Service业务层处理
  * 
  * @author tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
 public class ProductServiceImpl implements IProductService 
 {
     @Autowired
     private ProductMapper productMapper;
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
 
     /**
      * 查询物品信息管理
@@ -56,8 +53,6 @@ public class ProductServiceImpl implements IProductService
     @Override
     public int insertProduct(Product product)
     {
-        product.setProductId(snowFlakeUtil.nextId());
-
         product.setCreateTime(DateUtils.getNowDate());
         return productMapper.insertProduct(product);
     }

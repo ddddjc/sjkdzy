@@ -7,7 +7,7 @@ import com.ruoyi.database.domain.Brand;
  * 品牌管理Service接口
  * 
  * @author Tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 public interface IBrandService 
 {

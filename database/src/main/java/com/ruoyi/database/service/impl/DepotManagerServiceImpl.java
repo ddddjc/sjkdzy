@@ -2,7 +2,6 @@ package com.ruoyi.database.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -17,16 +16,13 @@ import com.ruoyi.database.service.IDepotManagerService;
  * 仓库管理员管理Service业务层处理
  * 
  * @author tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
-public class DepotManagerServiceImpl implements IDepotManagerService {
+public class DepotManagerServiceImpl implements IDepotManagerService 
+{
     @Autowired
     private DepotManagerMapper depotManagerMapper;
-
-
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
 
     /**
      * 查询仓库管理员管理
@@ -62,8 +58,6 @@ public class DepotManagerServiceImpl implements IDepotManagerService {
     @Override
     public int insertDepotManager(DepotManager depotManager)
     {
-        depotManager.setDepotManagerId(snowFlakeUtil.nextId());
-
         depotManager.setCreateTime(DateUtils.getNowDate());
         int rows = depotManagerMapper.insertDepotManager(depotManager);
         insertDepot(depotManager);
@@ -128,8 +122,6 @@ public class DepotManagerServiceImpl implements IDepotManagerService {
             List<Depot> list = new ArrayList<Depot>();
             for (Depot depot : depotList)
             {
-                depot.setDepotId(snowFlakeUtil.nextId());
-
                 depot.setDepotManagerId(depotManagerId);
                 list.add(depot);
             }

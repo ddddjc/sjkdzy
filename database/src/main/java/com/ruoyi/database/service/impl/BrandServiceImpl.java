@@ -2,7 +2,6 @@ package com.ruoyi.database.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -17,15 +16,14 @@ import com.ruoyi.database.service.IBrandService;
  * 品牌管理Service业务层处理
  * 
  * @author Tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
 public class BrandServiceImpl implements IBrandService 
 {
     @Autowired
     private BrandMapper brandMapper;
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
+
     /**
      * 查询品牌管理
      * 
@@ -60,8 +58,6 @@ public class BrandServiceImpl implements IBrandService
     @Override
     public int insertBrand(Brand brand)
     {
-        brand.setBrandId(snowFlakeUtil.nextId());
-
         brand.setCreateTime(DateUtils.getNowDate());
         int rows = brandMapper.insertBrand(brand);
         insertProduct(brand);
@@ -120,14 +116,12 @@ public class BrandServiceImpl implements IBrandService
     public void insertProduct(Brand brand)
     {
         List<Product> productList = brand.getProductList();
-
         Long brandId = brand.getBrandId();
         if (StringUtils.isNotNull(productList))
         {
             List<Product> list = new ArrayList<Product>();
             for (Product product : productList)
             {
-                product.setProductId(snowFlakeUtil.nextId());
                 product.setBrandId(brandId);
                 list.add(product);
             }

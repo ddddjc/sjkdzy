@@ -7,7 +7,7 @@ import com.ruoyi.database.domain.DepotManager;
  * 仓库管理员管理Service接口
  * 
  * @author tinaliasd
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 public interface IDepotManagerService 
 {

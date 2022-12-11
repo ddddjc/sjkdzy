@@ -1,8 +1,6 @@
 package com.ruoyi.database.service.impl;
 
 import java.util.List;
-
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.database.mapper.SaleOrderMapper;
@@ -13,17 +11,13 @@ import com.ruoyi.database.service.ISaleOrderService;
  * 出售订单Service业务层处理
  * 
  * @author ruoyi
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
 public class SaleOrderServiceImpl implements ISaleOrderService 
 {
     @Autowired
     private SaleOrderMapper saleOrderMapper;
-
-
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
 
     /**
      * 查询出售订单
@@ -58,8 +52,6 @@ public class SaleOrderServiceImpl implements ISaleOrderService
     @Override
     public int insertSaleOrder(SaleOrder saleOrder)
     {
-        saleOrder.setSaleOrderId(snowFlakeUtil.nextId());
-
         return saleOrderMapper.insertSaleOrder(saleOrder);
     }
 

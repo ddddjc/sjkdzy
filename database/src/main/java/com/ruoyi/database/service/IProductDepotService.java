@@ -7,7 +7,7 @@ import com.ruoyi.database.domain.ProductDepot;
  * 仓库物品数量管理Service接口
  * 
  * @author 张旭
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 public interface IProductDepotService 
 {

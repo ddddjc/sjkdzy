@@ -33,6 +33,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
+          <el-option
+            v-for="dict in dict.type.database_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -92,7 +102,11 @@
       <el-table-column label="供应商电话" align="center" prop="providerTelephone" />
       <el-table-column label="供应商城市" align="center" prop="providerCity" />
       <el-table-column label="供应商描述" align="center" prop="provideDescription" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.database_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -137,6 +151,15 @@
         <el-form-item label="供应商描述" prop="provideDescription">
           <el-input v-model="form.provideDescription" placeholder="请输入供应商描述" />
         </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="form.status">
+            <el-radio
+              v-for="dict in dict.type.database_status"
+              :key="dict.value"
+:label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -154,6 +177,7 @@ import { listProvider, getProvider, delProvider, addProvider, updateProvider } f
 
 export default {
   name: "Provider",
+  dicts: ['database_status'],
   data() {
     return {
       // 遮罩层

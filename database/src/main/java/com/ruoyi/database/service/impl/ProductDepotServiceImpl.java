@@ -1,8 +1,6 @@
 package com.ruoyi.database.service.impl;
 
 import java.util.List;
-
-import com.ruoyi.database.util.SnowFlakeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.database.mapper.ProductDepotMapper;
@@ -13,7 +11,7 @@ import com.ruoyi.database.service.IProductDepotService;
  * 仓库物品数量管理Service业务层处理
  * 
  * @author 张旭
- * @date 2022-12-05
+ * @date 2022-12-11
  */
 @Service
 public class ProductDepotServiceImpl implements IProductDepotService 
@@ -21,9 +19,6 @@ public class ProductDepotServiceImpl implements IProductDepotService
     @Autowired
     private ProductDepotMapper productDepotMapper;
 
-
-    @Autowired
-    private SnowFlakeUtil snowFlakeUtil;
     /**
      * 查询仓库物品数量管理
      * 
@@ -57,7 +52,6 @@ public class ProductDepotServiceImpl implements IProductDepotService
     @Override
     public int insertProductDepot(ProductDepot productDepot)
     {
-        productDepot.setProductDepotId(snowFlakeUtil.nextId());
         return productDepotMapper.insertProductDepot(productDepot);
     }
 
